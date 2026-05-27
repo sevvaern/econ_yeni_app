@@ -964,7 +964,7 @@ elif page == "Digital Twin Simulation":
                                  textposition="outside", showlegend=False))
         fig_layout(fig, title="Avg Wait by Scenario",
                    yaxis_title="Minutes",
-                   yaxis_range=[0,scen_df["Wait (min)"].max()*1.3])
+                   yaxis_range=[0, float(scen_df["Wait (min)"].max()) * 1.3 if not scen_df.empty and scen_df["Wait (min)"].notna().any() else 10])
         st.plotly_chart(fig, use_container_width=True)
 
     with col_r:
