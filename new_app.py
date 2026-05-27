@@ -737,10 +737,15 @@ elif page == "Queue Optimisation":
             text=[f"{row['Wait (min)']} min"], textposition="outside",
             showlegend=False,
         ))
-    fig_layout(fig, title="Estimated Avg Wait Time by Scenario",
-               yaxis_title="Minutes",
-               yaxis_range=[0, sc_df["Wait (min)"].max()*1.3])
-    st.plotly_chart(fig, use_container_width=True)
+    fig_layout(
+    fig,
+    title="Estimated Avg Wait Time by Scenario",
+    yaxis_title="Minutes"
+)
+
+    fig.update_yaxes(
+        range=[0, float(sc_df["Wait (min)"].max()) * 1.3]
+    )
 
 
 # ═════════════════════════════════════════════════════════════════════════════
