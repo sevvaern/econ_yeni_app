@@ -161,7 +161,20 @@ BASE = dict(
 )
 
 def fig_layout(fig, **kw):
-    fig.update_layout(**BASE, **kw)
+    layout = dict(BASE)  # shallow copy to avoid mutating BASE
+
+    # Merge xaxis / yaxis overrides into BASE sub-dicts rather than replacing them
+    for axis in ("xaxis", "yaxis"):
+        if axis in kw:
+            val = kw.pop(axis)
+            if isinstance(val, dict):
+                merged = dict(layout[axis])   # copy BASE's axis dict
+                merged.update(val)            # overlay caller's overrides
+                layout[axis] = merged
+            else:
+                layout[axis] = val            # non-dict (rare) — just replace
+
+    fig.update_layout(**layout, **kw)
     return fig
 
 MONTH = {1:"Jan",2:"Feb",3:"Mar",4:"Apr",5:"May",6:"Jun",
