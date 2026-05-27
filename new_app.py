@@ -161,19 +161,12 @@ BASE = dict(
 )
 
 def fig_layout(fig, **kw):
-    layout = dict(BASE)  # shallow copy to avoid mutating BASE
-
-    # Merge xaxis / yaxis overrides into BASE sub-dicts rather than replacing them
+    layout = dict(BASE)
     for axis in ("xaxis", "yaxis"):
-        if axis in kw:
-            val = kw.pop(axis)
-            if isinstance(val, dict):
-                merged = dict(layout[axis])   # copy BASE's axis dict
-                merged.update(val)            # overlay caller's overrides
-                layout[axis] = merged
-            else:
-                layout[axis] = val            # non-dict (rare) — just replace
-
+        if axis in kw and isinstance(kw[axis], dict):
+            base_axis = dict(layout.get(axis, {}))
+            base_axis.update(kw.pop(axis))
+            layout[axis] = base_axis
     fig.update_layout(**layout, **kw)
     return fig
 
@@ -550,7 +543,7 @@ elif page == "Process Mining Analytics":
                           texttemplate="%{text:.1f}", textposition="outside")
         fig.update_coloraxes(showscale=False)
         fig_layout(fig, title="Process Stage Duration Analysis",
-                   yaxis_range=[0, means.max()*1.28])
+                  yaxis=dict(range=[0, means.max()*1.28]))
         st.plotly_chart(fig, use_container_width=True)
 
     with col_r:
