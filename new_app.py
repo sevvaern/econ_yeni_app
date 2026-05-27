@@ -738,13 +738,13 @@ elif page == "Queue Optimisation":
             showlegend=False,
         ))
     fig_layout(
-    fig,
-    title="Estimated Avg Wait Time by Scenario",
-    yaxis_title="Minutes"
+        fig,
+        title="Avg Wait by Scenario",
+        yaxis_title="Minutes"
 )
 
     fig.update_yaxes(
-        range=[0, float(sc_df["Wait (min)"].max()) * 1.3]
+        range=[0, max_wait]
     )
 
 
