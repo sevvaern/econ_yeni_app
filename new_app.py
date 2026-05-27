@@ -962,19 +962,26 @@ elif page == "Digital Twin Simulation":
                                  marker_color=clrs[i],
                                  text=[f"{row['Wait (min)']} min"],
                                  textposition="outside", showlegend=False))
-    max_wait = (
-        10.0
-        if scen_df.empty or scen_df["Wait (min)"].isna().all() or str(scen_df["Wait (min)"].max()) == "nan"
-        else float(scen_df["Wait (min)"].max()) * 1.3
-    )
+    try:
+        # Verideki maksimum değeri alıp float yapmayı deniyoruz
+        raw_max = scen_df["Wait (min)"].max()
+        if scen_df.empty or str(raw_max) == "nan" or raw_max is None:
+            max_wait = 10.0
+        else:
+            max_max = float(raw_max)
+            max_wait = max_max * 1.3 if max_max > 0 else 10.0
+    except Exception:
+        # En ufak bir hesaplama hatasında veya boş veride sistem buraya sığınacak ve çökmeyecek
+        max_wait = 10.0
 
+    # Grafiği çizdiriyoruz
     fig_layout(
         fig,
         title="Avg Wait by Scenario",
         yaxis_title="Minutes",
         yaxis_range=[0, max_wait]
     )
-
+        
     with col_r:
         slbl("UTILISATION BY SCENARIO")
         fig2 = go.Figure()
