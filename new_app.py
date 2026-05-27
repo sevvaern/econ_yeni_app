@@ -962,10 +962,18 @@ elif page == "Digital Twin Simulation":
                                  marker_color=clrs[i],
                                  text=[f"{row['Wait (min)']} min"],
                                  textposition="outside", showlegend=False))
-        fig_layout(fig, title="Avg Wait by Scenario",
-                   yaxis_title="Minutes",
-                   yaxis_range=[0, 10 if scen_df.empty or str(scen_df["Wait (min)"].max()) == "nan" else float(scen_df["Wait (min)"].max()) * 1.3])
-        st.plotly_chart(fig, use_container_width=True)
+max_wait = (
+    10.0
+    if scen_df.empty or scen_df["Wait (min)"].isna().all() or str(scen_df["Wait (min)"].max()) == "nan"
+    else float(scen_df["Wait (min)"].max()) * 1.3
+)
+
+fig_layout(
+    fig,
+    title="Avg Wait by Scenario",
+    yaxis_title="Minutes",
+    yaxis_range=[0, max_wait]
+)
 
     with col_r:
         slbl("UTILISATION BY SCENARIO")
