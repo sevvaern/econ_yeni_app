@@ -737,11 +737,13 @@ elif page == "Queue Optimisation":
             text=[f"{row['Wait (min)']} min"], textposition="outside",
             showlegend=False,
         ))
+    max_wait = float(sc_df["Wait (min)"].max()) * 1.3
+
     fig_layout(
         fig,
         title="Avg Wait by Scenario",
         yaxis_title="Minutes"
-)
+    )
 
     fig.update_yaxes(
         range=[0, max_wait]
